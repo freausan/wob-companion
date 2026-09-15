@@ -118,15 +118,10 @@ public class SkyblockSessionManager {
         // If at least 30 minutes have elapsed since the last update, trigger a snapshot upon hopping.
         long now = System.currentTimeMillis();
         if (now - lastSnapshotUpdateMillis >= MID_SESSION_UPDATE_INTERVAL_MILLIS) {
-            LOGGER.info("30-minute threshold reached on server hop; requesting mid-session snapshot");
+            LOGGER.debug("30-minute threshold reached on server hop; requesting silent mid-session snapshot");
             lastSnapshotUpdateMillis = now;
             if (activePlayerUuid != null) {
-                apiClient.sendSessionEventAsync(activePlayerUuid, SessionEvent.CONNECT)
-                        .thenAccept(response -> {
-                            if (response.success()) {
-                                ChatFeedback.midSessionUpdate(client, config);
-                            }
-                        });
+                apiClient.sendSessionEventAsync(activePlayerUuid, SessionEvent.CONNECT);
             }
         }
     }

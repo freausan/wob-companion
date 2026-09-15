@@ -41,8 +41,4 @@ public class ChatFeedback {
     public static void cooldownActive(Minecraft client, ModConfig config) {
         sendMessage(client, config, "Profile updated recently (cooldown active).");
     }
-
-    public static void midSessionUpdate(Minecraft client, ModConfig config) {
-        sendMessage(client, config, "Mid-session stats update requested.");
-    }
 }

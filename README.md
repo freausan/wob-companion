@@ -23,7 +23,6 @@ A lightweight, production-ready Fabric 26.1.2 client-side mod for Minecraft that
   - `§b[Wise Old Block] §7SkyBlock session started.`
   - `§b[Wise Old Block] §7SkyBlock session ended.`
   - `§b[Wise Old Block] §7Profile updated recently (cooldown active).` (on HTTP 429)
-  - `§b[Wise Old Block] §7Mid-session stats update requested.`
 - **Client Commands**:
   - `/wob status` - Show current tracking state, backend URL, and active player UUID
   - `/wob update` - Manually request an immediate snapshot update
