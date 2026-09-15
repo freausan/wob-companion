@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "wob_companion",
   "version": "${version}",
-  "name": "WOB Companion",
+  "name": "Wise Old Block Companion",
   "description": "Companion Fabric mod for Wise Old Block on Hypixel Skyblock.",
   "authors": [
     "WiseOldBlock"
@@ -15,12 +15,12 @@
   "environment": "client",
   "entrypoints": {
     "client": [
-      "xyz.wiseoldblock.companion.WOBCompanionMod"
+      "xyz.wiseoldblock.companion.WiseOldBlockCompanionMod"
     ]
   },
   "depends": {
     "fabricloader": ">=0.19.5",
-    "minecraft": "~26.1",
+    "minecraft": "~26.1.2",
     "java": ">=25",
     "fabric-api": "*"
   }

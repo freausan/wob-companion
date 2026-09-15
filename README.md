@@ -1,30 +1,61 @@
-# WOB Companion
+# Wise Old Block Companion
 
 [![Build and Release](https://github.com/freausan/wob-companion/actions/workflows/build-and-release.yml/badge.svg)](https://github.com/freausan/wob-companion/actions/workflows/build-and-release.yml)
 
-A lightweight Fabric mod for Minecraft 26.1 acting as an in-game accessory/companion to the [Wise Old Block](https://wiseoldblock.xyz) API on Hypixel Skyblock.
+A lightweight, production-ready Fabric 26.1.2 client-side mod for Minecraft that automatically detects player play sessions on **Hypixel SkyBlock** and reports session boundary events (`connect` and `disconnect`) to the **Wise Old Block** REST API (`POST /players/{playerUuid}`).
 
 ## Features
 
-- **Fabric 26.1 / 26.1.2** compatible (Java 25)
-- **Wise Old Block API Integration**: Connects seamlessly with the wiseoldblock.xyz backend
+- **Automated SkyBlock Session Detection**:
+  - Validates connection to `*.hypixel.net`.
+  - Accurately checks the scoreboard sidebar objective display name (`SKYBLOCK`) and score lines.
+  - Automatically sends `{"event": "connect"}` upon entering SkyBlock.
+  - Automatically sends `{"event": "disconnect"}` upon leaving SkyBlock or stopping the game.
+- **Warping & Server-Hopping Grace Period**:
+  - Warping between SkyBlock servers (`/warp hub`, `/is`, `/warp dungeon`) will **not** trigger premature disconnect/connect events.
+  - Features a **10-second debounce grace period** before concluding that the player has truly departed SkyBlock.
+  - If more than **30 minutes** have elapsed since the last update, warping will automatically request a mid-session stat snapshot update.
+- **Asynchronous & Non-Blocking**:
+  - All network traffic is handled by Java's native `HttpClient` on a dedicated background worker daemon.
+  - Strict 5-second request timeout to guarantee zero client freeze or tick-loop stutter.
+  - Synchronous bounded flush on `ClientLifecycleEvents.CLIENT_STOPPING` so session end events are not dropped during game exit.
+- **In-Game Chat Feedback**:
+  - `§b[Wise Old Block] §7SkyBlock session started.`
+  - `§b[Wise Old Block] §7SkyBlock session ended.`
+  - `§b[Wise Old Block] §7Profile updated recently (cooldown active).` (on HTTP 429)
+  - `§b[Wise Old Block] §7Mid-session stats update requested.`
 - **Client Commands**:
-  - /wob status or /companion status - View connection and configuration status
-  - /wob ping or /companion ping - Test API connectivity
-  - /wob toggle or /companion toggle - Quickly enable/disable mod functionality
-  - /wob help or /companion help - Display available commands
-- **Automated CI/CD**: Automatic builds on push/PR and automated GitHub Releases with packaged JARs on * tags.
+  - `/wob status` - Show current tracking state, backend URL, and active player UUID
+  - `/wob update` - Manually request an immediate snapshot update
+  - `/wob toggle` - Enable or disable session reporting
+  - `/wob notify` - Toggle in-game chat messages on or off
+  - `/wob help` - List available commands (also accessible via `/companion`)
+
+## Configuration
+
+The configuration file is saved at `config/wise-old-block.json`:
+
+```json
+{
+  "backendUrl": "https://api.wiseoldblock.xyz",
+  "enabled": true,
+  "notifyInChat": true
+}
+```
+
+- **`backendUrl`**: Base URL of the Wise Old Block API backend (default: `https://api.wiseoldblock.xyz`, also accepts local dev instances e.g. `http://localhost:3001`).
+- **`enabled`**: Master toggle for session boundary tracking.
+- **`notifyInChat`**: Whether to display clean status messages in client chat.
 
 ## Building from Source
 
-Ensure you have **Java 25** installed:
+Requires **Java 25**:
 
-\\\ash
-# Build mod JAR
+```bash
 ./gradlew build
-\\\
+```
 
-The built JAR will be located in uild/libs/.
+Built JAR files are located in `build/libs/`.
 
 ## License
 
