@@ -1,0 +1,15 @@
+# Gradle
+.gradle/
+build/
+logs/
+
+# Fabric Loom
+.fabric/
+run/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+bin/
+out/
